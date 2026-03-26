@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     // So frontend can call /api/* without CORS hassle in dev
     proxy: {
-      '/api': 'http://127.0.0.1:8000',
+      '/api': 'https://dodgeai-smart-analytics-ai-tool.onrender.com',
     },
   },
 })
