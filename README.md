@@ -73,7 +73,7 @@ Explore an SAP Order-to-Cash (O2C) dataset as an **interactive graph** and ask *
 
 ### Deployment
 
-- **Frontend**: Vercel
+- **Frontend**: Netlify
 - **Backend**: Render (FastAPI)
 - **Database**: Neon (PostgreSQL)
 - **Single demo link**:
