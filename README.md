@@ -2,7 +2,7 @@
 
 Explore an SAP Order-to-Cash (O2C) dataset as an **interactive graph** and ask **natural-language questions** with grounded, dataset-backed answers.
 
-- **Demo**: `<add-your-single-demo-link-here>`
+- **Demo**: `https://ashishpaldodgeai.netlify.app/`
 - **Core flow**: SalesOrder → OutboundDelivery → BillingDocument → JournalEntry → Payment
 
 ### Project Overview
