@@ -1,0 +1,6 @@
+# Proxy API requests to the deployed backend (Render)
+/api/*  https://dodgeai-smart-analytics-ai-tool.onrender.com/api/:splat  200
+
+# SPA fallback (serve index.html for client-side routes)
+/*  /index.html  200
+
