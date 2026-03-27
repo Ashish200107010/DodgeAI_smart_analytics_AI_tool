@@ -24,7 +24,11 @@ def list_edge_types(conn: DBConn, edge_types: EdgeTypes) -> list[EdgeType]:
     - enrich with metadata from the registry when available
     """
     try:
-        rows = conn.execute(text("SELECT DISTINCT edge_type FROM graph.graph_edges ORDER BY edge_type")).all()
+        # Keep this endpoint fast; if DB is cold/slow we prefer a quick fallback
+        # to avoid upstream (Render/Neon) request timeouts on first load.
+        with conn.begin():
+            conn.execute(text("SET LOCAL statement_timeout = '2000ms'"))
+            rows = conn.execute(text("SELECT DISTINCT edge_type FROM graph.graph_edges ORDER BY edge_type")).all()
         codes = [r[0] for r in rows if r and r[0]]
     except SQLAlchemyError:
         # Fallback: registry definitions only (useful before the graph projection exists)

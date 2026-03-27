@@ -18,10 +18,46 @@ export default function App() {
   const [focusNodeId, setFocusNodeId] = useState<UUID | null>(null);
 
   useEffect(() => {
-    api
-      .listEdgeTypes()
-      .then(setEdgeTypes)
-      .catch((e) => setEdgeTypesError(e instanceof Error ? e.message : "Failed to load edge types"));
+    let canceled = false;
+
+    const maxAttempts = 4;
+    const baseDelayMs = 900;
+
+    function isTransient(msg: string) {
+      const m = (msg || "").toLowerCase();
+      return (
+        m.includes("504") ||
+        m.includes("503") ||
+        m.includes("gateway") ||
+        m.includes("timeout") ||
+        m.includes("received html instead of json")
+      );
+    }
+
+    const run = async (attempt: number) => {
+      try {
+        const types = await api.listEdgeTypes();
+        if (canceled) return;
+        setEdgeTypes(types);
+        setEdgeTypesError(null);
+      } catch (e) {
+        if (canceled) return;
+        const msg = e instanceof Error ? e.message : "Failed to load edge types";
+        const canRetry = attempt < maxAttempts - 1 && isTransient(msg);
+        if (canRetry) {
+          setEdgeTypesError(`Warming up backend… retrying (${attempt + 1}/${maxAttempts})`);
+          const delay = baseDelayMs * Math.pow(2, attempt);
+          window.setTimeout(() => run(attempt + 1), delay);
+          return;
+        }
+        setEdgeTypesError(msg);
+      }
+    };
+
+    run(0);
+    return () => {
+      canceled = true;
+    };
   }, []);
 
   const mappingOptions = useMemo(() => {
