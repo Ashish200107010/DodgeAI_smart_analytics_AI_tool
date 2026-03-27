@@ -64,7 +64,7 @@ export default function App() {
       </div>
 
       {edgeTypesError ? <div className={styles.bannerError}>{edgeTypesError}</div> : null}
-
+      <div className={styles.bannerInfo}>Double refresh the page if not working..</div>
       <div className={styles.main}>
         <div className={styles.graphPane}>
           <GraphView
